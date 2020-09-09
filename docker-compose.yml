@@ -1,0 +1,18 @@
+version: "3.0"
+
+volumes:
+  node-modules:
+    driver: local
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+      - 4000:4000
+    command: nf start
+    tty: true
+    volumes:
+      - .:/usr/src/app
+      - node-modules:/usr/src/app/node_modules
