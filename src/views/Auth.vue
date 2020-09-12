@@ -1,106 +1,73 @@
-<template>
-  <v-row justify="center">
-    <v-col cols="12" sm="8" md="5" style="max-width: 420px">
-      <v-card class="">
-        <v-container class="spacing-playground px-8">
-          <v-row>
-            <v-col>
-              <form>
-                <v-text-field
-                  v-model="name"
-                  :error-messages="nameErrors"
-                  :counter="10"
-                  label="Name"
-                  required
-                  @input="$v.name.$touch()"
-                  @blur="$v.name.$touch()"
-                ></v-text-field>
-                <v-text-field
-                  v-model="email"
-                  :error-messages="emailErrors"
-                  label="E-mail"
-                  required
-                  @input="$v.email.$touch()"
-                  @blur="$v.email.$touch()"
-                ></v-text-field>
-                <v-select
-                  v-model="select"
-                  :items="items"
-                  :error-messages="selectErrors"
-                  label="Item"
-                  required
-                  @change="$v.select.$touch()"
-                  @blur="$v.select.$touch()"
-                ></v-select>
-
-                <v-btn class="mr-4" @click="submit">submit</v-btn>
-                <v-btn @click="clear">clear</v-btn>
-              </form>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-  </v-row>
+<template lang="pug">
+  v-row(justify='center')
+    v-col(cols='12' sm='8' md='5' style='max-width: 420px')
+      v-card
+        v-container.spacing-playground.px-8
+          v-row
+            v-col
+              form
+                v-text-field(
+                  v-model='name' 
+                  :rules='getRules("name")' 
+                  :counter='50' 
+                  label='Name' 
+                )
+                v-text-field(
+                  v-model='email' 
+                  :rules='getRules("email")' 
+                  label='E-mail' 
+                )
+                v-text-field(
+                  v-model='password' 
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+                  :rules='getRules("password")' 
+                  :type="showPassword ? 'text' : 'password'" 
+                  name='password' 
+                  label='Password' 
+                  counter='' 
+                  @click:append='showPassword = !showPassword'
+                )
+                v-btn.mr-4(@click='submit') submit
+                v-btn(@click='clear') clear
+                p {{current}}
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, maxLength, email } from "vuelidate/lib/validators";
+const emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+const rules = {
+  password: {
+    required: (v) => !!v || "Password is required.",
+    min: (v) => v.length >= 6 || "Password must be at least 6 characters long",
+    max: (v) =>
+      v.length <= 100 || "Password must be at most 100 characters long",
+  },
+  email: {
+    required: (v) => !!v || "Email is required.",
+    valid: (v) => emailRegEx.test(v) || "Must be valid e-mail",
+  },
+  name: {
+    max: (v) => v.length <= 50 || "Name must be at most 50 characters long",
+  },
+};
 
 export default {
-  mixins: [validationMixin],
-
-  validations: {
-    name: { required, maxLength: maxLength(10) },
-    email: { required, email },
-    select: { required },
-    checkbox: {
-      checked(val) {
-        return val;
-      },
-    },
-  },
-
   data: () => ({
+    current: null,
     name: "",
     email: "",
-    select: null,
-    items: ["Item 1", "Item 2", "Item 3", "Item 4"],
-    checkbox: false,
+    password: "",
+    showPassword: false,
+    rules,
   }),
 
-  computed: {
-    checkboxErrors() {
-      const errors = [];
-      if (!this.$v.checkbox.$dirty) return errors;
-      !this.$v.checkbox.checked && errors.push("You must agree to continue!");
-      return errors;
-    },
-    selectErrors() {
-      const errors = [];
-      if (!this.$v.select.$dirty) return errors;
-      !this.$v.select.required && errors.push("Item is required");
-      return errors;
-    },
-    nameErrors() {
-      const errors = [];
-      if (!this.$v.name.$dirty) return errors;
-      !this.$v.name.maxLength &&
-        errors.push("Name must be at most 10 characters long");
-      !this.$v.name.required && errors.push("Name is required.");
-      return errors;
-    },
-    emailErrors() {
-      const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push("Must be valid e-mail");
-      !this.$v.email.required && errors.push("E-mail is required");
-      return errors;
-    },
-  },
-
   methods: {
+    getRules(type) {
+      const list = [];
+      Object.keys(rules[type]).forEach((key) => {
+        list.push(rules[type][key]);
+      });
+      return list;
+    },
     submit() {
       this.$v.$touch();
     },
@@ -108,8 +75,7 @@ export default {
       this.$v.$reset();
       this.name = "";
       this.email = "";
-      this.select = null;
-      this.checkbox = false;
+      this.password = "";
     },
   },
 };

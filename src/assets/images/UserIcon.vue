@@ -1,11 +1,5 @@
 <template>
-  <svg
-    :width="width"
-    :height="height"
-    enable-background="new 0 0 512 512"
-    viewBox="0 0 512 512"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg :width="width" :style="{ fill: color }" viewBox="0 0 512 512">
     <g>
       <path
         d="m256 0c-141.159 0-256 114.841-256 256s114.841 256 256 256 256-114.841 256-256-114.841-256-256-256zm0 482c-124.617 0-226-101.383-226-226s101.383-226 226-226 226 101.383 226 226-101.383 226-226 226z"
@@ -22,11 +16,11 @@
 
 <script>
 export default {
-  name: "User",
+  name: "UserIcon",
   props: {
-    height: {
-      type: [Number, String],
-      default: 40,
+    color: {
+      type: String,
+      default: "rgba(0,0,0,.8)",
     },
     width: {
       type: [Number, String],
@@ -35,21 +29,3 @@ export default {
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

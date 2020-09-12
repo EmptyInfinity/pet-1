@@ -1,15 +1,10 @@
-<template>
-  <v-app id="app">
-    <Header v-if="this.currentPage !== 'Auth'" />
-    <v-main>
-      <v-container class="fill-height" fluid>
-        <router-view />
-      </v-container>
-    </v-main>
-    <v-footer app v-if="this.currentPage !== 'Auth'">
-      footer
-    </v-footer>
-  </v-app>
+<template lang="pug">
+  v-app(id="app")
+    Header(v-if="!this.isAuth")
+    v-main
+      v-container(class="fill-height" fluid)
+        router-view
+    v-footer(app v-if="!this.isAuth") footer
 </template>
 
 <style lang="scss">
@@ -23,6 +18,8 @@
 <script>
 import Header from "./components/Header.vue";
 import userApi from "./api/user";
+const authRoutes = ["Login", "Register"];
+
 export default {
   name: "app",
   components: {
@@ -30,6 +27,7 @@ export default {
   },
   data: () => ({
     currentPage: null,
+    isAuth: null,
   }),
   created() {
     this.setCurrentPage();
@@ -38,6 +36,7 @@ export default {
     setCurrentPage() {
       const { name } = this.$router.history.current;
       this.currentPage = name;
+      this.isAuth = authRoutes.includes(name);
     },
   },
   watch: {

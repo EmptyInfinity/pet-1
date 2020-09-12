@@ -1,7 +1,5 @@
-<template>
-  <div class="Main">
-    <!-- <img alt="Vue logo" src="@/assets/images/worker.jpg" /> -->
-  </div>
+<template lang="pug">
+  div(class="Main") This is a Main page
 </template>
 
 <script>
@@ -10,20 +8,20 @@ import UserApi from "@api/user";
 
 export default {
   name: "Main",
-  components: {},
   data() {
     return {
+      message: "success message",
       form: {
         email: "someemail@gmail.com",
-        password: "password",
-      },
+        password: "password"
+      }
     };
   },
   computed: {
     validated() {
       const { email, password } = this.form;
       return email.length > 10 && password.length > 6;
-    },
+    }
   },
   methods: {
     onSubmitRegister(e) {
@@ -31,7 +29,7 @@ export default {
       if (this.validated) {
         const { email, password } = this.form;
         UserApi.register(email, password)
-          .then((resp) => {})
+          .then(resp => {})
           .catch(console.log);
       }
     },
@@ -40,7 +38,7 @@ export default {
       if (this.validated) {
         const { email, password } = this.form;
         UserApi.login(email, password)
-          .then((resp) => {})
+          .then(resp => {})
           .catch(console.log);
       }
     },
@@ -56,8 +54,8 @@ export default {
       this.$nextTick(() => {
         this.show = true;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped></style>

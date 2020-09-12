@@ -1,50 +1,68 @@
-<template>
-  <v-app-bar app>
-    header
-  </v-app-bar>
+<template lang="pug">
+  v-app-bar(app)
+    div(class="content") 
+      div logo
+      ul(class="d-flex")
+        li(v-for="(link, i) in links" :key="i")
+          a(:href="link.url") {{link.label}}
+      User
 </template>
 
 <script>
-import User from "../assets/images/User.vue";
+import User from "@components/User.vue";
+
+const links = [
+  {
+    url: "#",
+    label: "main",
+  },
+  {
+    url: "#",
+    label: "about us",
+  },
+  {
+    url: "#",
+    label: "works",
+  },
+  {
+    url: "#",
+    label: "contacts",
+  },
+];
+
 export default {
   name: "Header",
   components: {
     User,
   },
+  data: () => ({
+    links,
+  }),
   computed: {
     logined() {
       return !!this.$store.state.user;
     },
   },
   methods: {
-    goToUser() {
-      this.$router.push(this.logined ? "profile" : "auth");
-    },
+    // goToUser() {
+    //   this.$router.push(this.logined ? "profile" : "auth");
+    // },
   },
 };
 </script>
 
 <style scoped lang="scss">
-header {
-  border-radius: 0 0 35px 35px;
-  background-color: #ffa726;
-  box-shadow: 0px 2px 6px #00000063;
-  color: #0d0d0e;
-  padding: 20px;
+.content {
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-nav {
-  display: flex;
-  padding-left: 50px;
+  align-items: center;
+  & > div {
+    flex: 1;
+  }
 }
 a {
-  margin-right: 30px;
-  color: #1b1b25;
-  font-weight: 600;
-}
-.user {
-  cursor: pointer;
+  padding: 3px;
+  margin: 0 8px;
 }
 </style>
